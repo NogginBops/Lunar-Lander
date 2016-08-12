@@ -10,6 +10,10 @@ import game.gameObject.graphics.Paintable;
 import game.gameObject.physics.BasicRotatable;
 import game.gameObject.physics.Collidable;
 
+/**
+ * @author Julius Häger
+ *
+ */
 public class Projectile extends BasicRotatable implements Collidable, Paintable{
 	
 	protected float damage;
@@ -21,6 +25,14 @@ public class Projectile extends BasicRotatable implements Collidable, Paintable{
 	protected float lifetime = 5;
 	protected float lifetimeTimer = lifetime;
 	
+	/**
+	 * @param x
+	 * @param y
+	 * @param shape
+	 * @param rotation
+	 * @param damage
+	 * @param speed
+	 */
 	public Projectile(float x, float y, Shape shape, float rotation, float damage, float speed) {
 		super(x, y, shape, 4, rotation);
 		this.damage = damage;
