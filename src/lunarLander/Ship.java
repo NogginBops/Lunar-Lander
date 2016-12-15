@@ -16,7 +16,13 @@ import game.input.keys.KeyListener;
 import game.util.math.ColorUtils;
 import game.util.math.MathUtils;
 
+/**
+ * @author Julius Häger
+ *
+ */
 public class Ship extends BasicRotatable implements Paintable, Collidable, KeyListener {
+	
+	//NOTE: Rename to Rocket?
 	
 	private float rotationSpeed = 180f;
 	
@@ -27,17 +33,22 @@ public class Ship extends BasicRotatable implements Paintable, Collidable, KeyLi
 	private boolean applyingForce = false;
 	private boolean shooting = false;
 	
-	private float fuel = 5000;
+	private float fuel = 50000;
 	
 	private float thrustFuelDrain = 100;
 	
 	private float rotationFuelDrain = 10;
 	
-	private float shootCooldown = 0.2f;
+	private float shootCooldown = 0.1f;
 	private float cooldownTimer = 0;
 	
 	private float angle = 0;
 	
+	/**
+	 * @param x
+	 * @param y
+	 * @param shape
+	 */
 	public Ship(float x, float y, Shape shape) {
 		super(x, y, shape, 5, 0);
 		
@@ -102,6 +113,7 @@ public class Ship extends BasicRotatable implements Paintable, Collidable, KeyLi
 		g2d.setColor(Color.white);
 		
 		g2d.drawString("Fuel: " + fuel, 150, 20);
+		
 		/*
 		g2d.setColor(Color.blue);
 		
@@ -139,7 +151,9 @@ public class Ship extends BasicRotatable implements Paintable, Collidable, KeyLi
 	public void keyTyped(KeyEvent e) {
 		
 	}
-
+	
+	int target = 0;
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
@@ -163,6 +177,9 @@ public class Ship extends BasicRotatable implements Paintable, Collidable, KeyLi
 		return true;
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean isThrusting(){
 		return applyingForce && (fuel > 0);
 	}

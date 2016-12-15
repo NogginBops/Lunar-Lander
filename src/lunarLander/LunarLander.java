@@ -31,8 +31,15 @@ import game.screen.Screen;
 import game.util.math.ColorUtils;
 import game.util.math.MathUtils;
 
+/**
+ * @author Julius Häger
+ *
+ */
 public class LunarLander implements GameInitializer{
 
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		GameSettings settings = GameSettings.createDefaultGameSettings();
 		
@@ -145,7 +152,7 @@ public class LunarLander implements GameInitializer{
 			public void earlyUpdate(float deltaTime) {
 				if(projectileEmitters == null){
 					projectileEmitters = new CopyOnWriteArrayList<>();
-					for (int i = 0; i < 30; i++) {
+					for (int i = 0; i < 50; i++) {
 						ParticleEmitter emitter = new ParticleEmitter(0, 0, 5, 100);
 						
 						system.addEmitter(emitter);
@@ -318,6 +325,10 @@ public class LunarLander implements GameInitializer{
 		*/
 	}
 	
+	/**
+	 * @author Julius Häger
+	 *
+	 */
 	public class Test extends BasicGameObject implements MouseListener, Paintable {
 
 		Point2D point = new Point2D.Float();
@@ -326,6 +337,14 @@ public class LunarLander implements GameInitializer{
 		
 		ParticleSystem system;
 		
+		/**
+		 * @param x
+		 * @param y
+		 * @param width
+		 * @param height
+		 * @param zOrder
+		 * @param system
+		 */
 		public Test(float x, float y, float width, float height, int zOrder, ParticleSystem system) {
 			super(x, y, width, height, zOrder);
 			

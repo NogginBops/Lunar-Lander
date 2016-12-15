@@ -12,8 +12,15 @@ import game.gameObject.physics.BasicCollidable;
 import game.gameObject.physics.Collidable;
 import game.util.math.MathUtils;
 
+/**
+ * @author Julius Häger
+ *
+ */
 public class Land extends BasicCollidable implements Paintable {
 	
+	/**
+	 * 
+	 */
 	public static float landingSpotLength = 0.02f;
 	
 	private static float[] smoothingKernel = new float[]{ 1/44f, 3/44f, 5/44f, 8/44f, 10/44f, 8/44f, 5/44f, 3/44f, 1/44f };
@@ -23,6 +30,14 @@ public class Land extends BasicCollidable implements Paintable {
 	
 	private boolean[] colliding;
 	
+	/**
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param res
+	 * @return
+	 */
 	public static Land generateLand(float x, float y, float width, float height, int res){
 		float spacing = width / res;
 		
