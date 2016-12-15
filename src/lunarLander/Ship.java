@@ -142,18 +142,20 @@ public class Ship extends BasicRotatable implements Paintable, Collidable, KeyLi
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		rotatingRight = Game.keyHandler.isBound("Right", e.getKeyCode()) ? true : rotatingRight;
-		rotatingLeft = Game.keyHandler.isBound("Left", e.getKeyCode()) ? true : rotatingLeft;
-		applyingForce = Game.keyHandler.isBound("Thrust", e.getKeyCode()) ? true : applyingForce;
-		shooting = Game.keyHandler.isBound("Fire", e.getKeyCode()) ? true : shooting;
+		int keyCode = e.getKeyCode();
+		rotatingRight = Game.keyHandler.isBound("Right", keyCode) ? true : rotatingRight;
+		rotatingLeft = Game.keyHandler.isBound("Left", keyCode) ? true : rotatingLeft;
+		applyingForce = Game.keyHandler.isBound("Thrust", keyCode) ? true : applyingForce;
+		shooting = Game.keyHandler.isBound("Fire", keyCode) ? true : shooting;
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		rotatingRight = Game.keyHandler.isBound("Right", e.getKeyCode()) ? false : rotatingRight;
-		rotatingLeft = Game.keyHandler.isBound("Left", e.getKeyCode()) ? false : rotatingLeft;
-		applyingForce = Game.keyHandler.isBound("Thrust", e.getKeyCode()) ? false : applyingForce;
-		shooting = Game.keyHandler.isBound("Fire", e.getKeyCode()) ? false : shooting;
+		int keyCode = e.getKeyCode();
+		rotatingRight = Game.keyHandler.isBound("Right", keyCode) ? false : rotatingRight;
+		rotatingLeft = Game.keyHandler.isBound("Left", keyCode) ? false : rotatingLeft;
+		applyingForce = Game.keyHandler.isBound("Thrust", keyCode) ? false : applyingForce;
+		shooting = Game.keyHandler.isBound("Fire", keyCode) ? false : shooting;
 	}
 
 	@Override
