@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import game.GameSystem;
 import game.IO.IOHandler;
 import game.IO.load.LoadRequest;
 import game.gameObject.BasicGameObject;
+import game.gameObject.GameObject;
 import game.gameObject.graphics.Camera;
 import game.gameObject.graphics.Paintable;
 import game.gameObject.particles.Particle;
@@ -48,6 +50,12 @@ public class LunarLander implements GameInitializer{
 		settings.putSetting("GameInit", new LunarLander());
 		
 		settings.putSetting("ScreenMode", Screen.Mode.NORMAL);
+		
+		settings.putSetting("OnScreenDebug", true);
+		
+		settings.putSetting("DebugID", true);
+		
+		settings.putSetting("DebugGameSystem", true);
 		
 		Game game = new Game(settings);
 		
@@ -79,6 +87,7 @@ public class LunarLander implements GameInitializer{
 		};
 		
 		Polygon poly = new Polygon(xpoints, ypoints, xpoints.length);
+		
 		/*
 		float landHeight = 400;
 		
@@ -86,11 +95,13 @@ public class LunarLander implements GameInitializer{
 		
 		Game.gameObjectHandler.addGameObject(land, "Land");
 		*/
+		
 		Ship ship = new Ship(200, 200, poly);
 		
 		Game.gameObjectHandler.addGameObject(ship, "Player ship");
 		
-		BoxTransform transform = new BoxTransform(0, 0, Game.screen.getWidth(), Game.screen.getHeight());
+		//FIXME: Never pass null to the transform constructor!
+		BoxTransform<GameObject> transform = new BoxTransform<GameObject>(null, 0, 0, Game.screen.getWidth(), Game.screen.getHeight());
 		
 		ParticleSystem system = new ParticleSystem(transform, 4, 2000, (p) -> { p.setLifetime(1.5f); p.color = Color.red; });
 		
@@ -421,6 +432,11 @@ public class LunarLander implements GameInitializer{
 		@Override
 		public boolean souldReceiveMouseInput() {
 			return true;
+		}
+
+		@Override
+		public Rectangle2D getBounds() {
+			return super.getBounds();
 		}
 	}
 }

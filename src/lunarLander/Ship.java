@@ -8,6 +8,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 
 import game.Game;
+import game.gameObject.GameObject;
 import game.gameObject.graphics.Paintable;
 import game.gameObject.physics.BasicRotatable;
 import game.gameObject.physics.Collidable;
@@ -52,7 +53,7 @@ public class Ship extends BasicRotatable implements Paintable, Collidable, KeyLi
 	public Ship(float x, float y, Shape shape) {
 		super(x, y, shape, 5, 0);
 		
-		transform = new BoxTransform(x, y, getWidth(), getHeight(), 0.5f, 0.25f);
+		transform = new BoxTransform<GameObject>(null, x, y, getWidth(), getHeight(), 0.5f, 0.25f);
 		
 		transform.setRotation(180);
 		
