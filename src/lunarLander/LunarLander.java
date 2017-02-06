@@ -7,9 +7,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import game.Game;
@@ -18,7 +20,9 @@ import game.GameSettings;
 import game.GameSystem;
 import game.IO.IOHandler;
 import game.IO.load.LoadRequest;
+import game.debug.log.Log.LogImportance;
 import game.gameObject.BasicGameObject;
+import game.gameObject.GameObject;
 import game.gameObject.graphics.Camera;
 import game.gameObject.graphics.Paintable;
 import game.gameObject.particles.Particle;
@@ -27,7 +31,7 @@ import game.gameObject.particles.ParticleEmitter;
 import game.gameObject.particles.ParticleSystem;
 import game.gameObject.transform.BoxTransform;
 import game.input.mouse.MouseListener;
-import game.screen.Screen;
+import game.settings.SettingsUtil;
 import game.util.math.ColorUtils;
 import game.util.math.MathUtils;
 
@@ -41,6 +45,13 @@ public class LunarLander implements GameInitializer{
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		GameSettings settings = SettingsUtil.load("./res/Settings.set");
+		
+		Game game = new Game(settings);
+		
+		game.run();
+		
+		/*
 		GameSettings settings = GameSettings.createDefaultGameSettings();
 		
 		settings.putSetting("OnScreenDebug", false);
@@ -52,11 +63,14 @@ public class LunarLander implements GameInitializer{
 		Game game = new Game(settings);
 		
 		game.run();
+		*/
 	}
 	
 	@Override
 	public void initialize(Game game, GameSettings settings) {
 		settings.getSettingAs("MainCamera", Camera.class).setBackgroundColor(Color.black);
+		
+		Game.log.setAcceptLevel(LogImportance.DEBUG);
 		
 		Game.keyHandler.addKeyBinding("Thrust", KeyEvent.VK_W, KeyEvent.VK_UP);
 		Game.keyHandler.addKeyBinding("Left", KeyEvent.VK_A, KeyEvent.VK_LEFT);
@@ -86,11 +100,11 @@ public class LunarLander implements GameInitializer{
 		
 		Game.gameObjectHandler.addGameObject(land, "Land");
 		*/
-		Ship ship = new Ship(200, 200, poly);
+		Ship ship = new Ship(200, 200, poly, settings.getSettingAs("MainCamera", Camera.class).getBounds());
 		
 		Game.gameObjectHandler.addGameObject(ship, "Player ship");
 		
-		BoxTransform transform = new BoxTransform(0, 0, Game.screen.getWidth(), Game.screen.getHeight());
+		BoxTransform<GameObject> transform = new BoxTransform<>(null, 0, 0, Game.screen.getWidth(), Game.screen.getHeight());
 		
 		ParticleSystem system = new ParticleSystem(transform, 4, 2000, (p) -> { p.setLifetime(1.5f); p.color = Color.red; });
 		
@@ -190,6 +204,41 @@ public class LunarLander implements GameInitializer{
 			@Override
 			public void lateUpdate(float deltaTime) {
 				emitter.enabled = ship.isThrusting();
+			}
+		});
+		
+		//Enemy enemy = new Enemy(new Transform(), poly, 5, ship);
+		
+		//Game.gameObjectHandler.addGameObject(enemy, "Enemy");
+		
+		Game.updater.addSystem(new GameSystem("Enemy Spawner") {
+			
+			float intervalMax = 10;
+			float intervalMin = 2;
+			
+			float timer = 0;
+			
+			Random rand = new Random();
+			
+			@Override
+			public void earlyUpdate(float deltaTime) {
+				
+				timer -= deltaTime;
+				
+				if(timer <= 0){
+					
+					//Spawn enemy
+					
+					//Game.gameObjectHandler.addGameObject(new Enemy(new Transform(), poly, 5, ship), "Enemy");
+					
+					timer = intervalMin + (rand.nextFloat() * (intervalMax - intervalMin));
+				}
+				
+			}
+			
+			@Override
+			public void lateUpdate(float deltaTime) {
+				
 			}
 		});
 		
@@ -421,6 +470,11 @@ public class LunarLander implements GameInitializer{
 		@Override
 		public boolean souldReceiveMouseInput() {
 			return true;
+		}
+
+		@Override
+		public Rectangle2D getBounds() {
+			return super.getBounds();
 		}
 	}
 }

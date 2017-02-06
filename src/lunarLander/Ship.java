@@ -5,13 +5,16 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import game.Game;
+import game.gameObject.GameObject;
 import game.gameObject.graphics.Paintable;
 import game.gameObject.physics.BasicRotatable;
 import game.gameObject.physics.Collidable;
 import game.gameObject.transform.BoxTransform;
+import game.gameObject.transform.Transform;
 import game.input.keys.KeyListener;
 import game.util.math.ColorUtils;
 import game.util.math.MathUtils;
@@ -20,13 +23,13 @@ import game.util.math.MathUtils;
  * @author Julius Häger
  *
  */
-public class Ship extends BasicRotatable implements Paintable, Collidable, KeyListener {
+public class Ship extends BasicRotatable implements Paintable, Collidable, KeyListener, Destroyable {
 	
 	//NOTE: Rename to Rocket?
 	
 	private float rotationSpeed = 180f;
 	
-	private float acceleration = 0.05f;
+	private float acceleration = 0.15f;
 
 	private boolean rotatingLeft = false;
 	private boolean rotatingRight = false;
@@ -39,20 +42,33 @@ public class Ship extends BasicRotatable implements Paintable, Collidable, KeyLi
 	
 	private float rotationFuelDrain = 10;
 	
-	private float shootCooldown = 0.1f;
+	private float shootCooldown = 0.15f;
 	private float cooldownTimer = 0;
 	
 	private float angle = 0;
+	
+	private float health;
+	
+	private Rectangle2D outerBounds;
+	
+	private BoxTransform<GameObject> boxTransform;
+	
+	private float outerBoundsBounciness = 0.3f;
+	
+	private float outerBoundsFriction = 0.85f;
 	
 	/**
 	 * @param x
 	 * @param y
 	 * @param shape
+	 * @param outerBounds 
 	 */
-	public Ship(float x, float y, Shape shape) {
+	public Ship(float x, float y, Shape shape, Rectangle2D outerBounds) {
 		super(x, y, shape, 5, 0);
 		
-		transform = new BoxTransform(x, y, getWidth(), getHeight(), 0.5f, 0.25f);
+		this.outerBounds = outerBounds;
+		
+		transform = boxTransform = new BoxTransform<>(null, x, y, getWidth(), getHeight(), 0.5f, 0.25f);
 		
 		transform.setRotation(180);
 		
@@ -62,6 +78,11 @@ public class Ship extends BasicRotatable implements Paintable, Collidable, KeyLi
 					"Dynamic Rotation: " + dr
 			};
 		});
+	}
+	
+	@Override
+	public void setTransform(Transform<GameObject> transform) {
+		Game.log.logError("Ship does not support the setTransform method!");
 	}
 	
 	@Override
@@ -96,7 +117,7 @@ public class Ship extends BasicRotatable implements Paintable, Collidable, KeyLi
 			//Should shots be another recource
 			if(shooting && cooldownTimer <= 0){
 				cooldownTimer = shootCooldown;
-				Projectile shot = new Projectile(transform.getX(), transform.getY(), new Ellipse2D.Float(-5, -5, 10, 10), transform.getRotation(), 1, 300);
+				Projectile shot = new Projectile(transform.getX(), transform.getY(), new Ellipse2D.Float(-5, -5, 10, 10), transform.getRotation(), 1, 300, this, outerBounds);
 				shot.color = ColorUtils.fromHSV(angle, 1, 1);
 				angle += 276;
 				Game.gameObjectHandler.addGameObject(shot, "Shot");
@@ -106,6 +127,37 @@ public class Ship extends BasicRotatable implements Paintable, Collidable, KeyLi
 		
 		//TODO: A better system for gravity
 		//setDY(getDY() + 0.01f);
+		
+		
+		
+		if(outerBounds.contains(getBounds()) == false){
+			
+			Rectangle2D bounds = getBounds();
+
+			if(bounds.getMinX() < outerBounds.getMinX()){
+				transform.setX((float) (transform.getX() + (outerBounds.getMinX() - bounds.getMinX()) - boxTransform.getOffsetX()));
+				setDX(-(getDX() * outerBoundsBounciness));
+				setDY(getDY() * outerBoundsFriction);
+			}
+			
+			if(bounds.getMaxX() > outerBounds.getMaxX()){
+				transform.setX((float) (transform.getX() + (outerBounds.getMaxX() - bounds.getMaxX()) - boxTransform.getOffsetX()));
+				setDX(-(getDX() * outerBoundsBounciness));
+				setDY(getDY() * outerBoundsFriction);
+			}
+			
+			if(bounds.getMinY() < outerBounds.getMinY()){
+				transform.setY((float) (transform.getY() + (outerBounds.getMinY() - bounds.getMinY()) - boxTransform.getOffsetY()));
+				setDY(-(getDY() * outerBoundsBounciness));
+				setDX(getDX() * outerBoundsFriction);
+			}
+			
+			if(bounds.getMaxY() > outerBounds.getMaxY()){
+				transform.setY((float) (transform.getY() + (outerBounds.getMaxY() - bounds.getMaxY()) - boxTransform.getOffsetY()));
+				setDY(-(getDY() * outerBoundsBounciness));
+				setDX(getDX() * outerBoundsFriction);
+			}
+		}
 	}
 	
 	@Override
@@ -144,7 +196,7 @@ public class Ship extends BasicRotatable implements Paintable, Collidable, KeyLi
 	
 	@Override
 	public void hasCollided(Collidable collisionObject) {
-		//TODO: Check the angle
+		
 	}
 
 	@Override
@@ -180,5 +232,29 @@ public class Ship extends BasicRotatable implements Paintable, Collidable, KeyLi
 	 */
 	public boolean isThrusting(){
 		return applyingForce && (fuel > 0);
+	}
+
+	@Override
+	public float getHealth() {
+		return health;
+	}
+
+	@Override
+	public void setHealth(float health) {
+		this.health = health;
+	}
+
+	@Override
+	public void damage(float damage) {
+		health -= damage;
+		if(health < 0){
+			destroy();
+		}
+	}
+
+	@Override
+	public void destroy() {
+		Game.gameObjectHandler.removeGameObject(this);
+		
 	}
 }

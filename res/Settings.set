@@ -1,0 +1,38 @@
+Name: (java.lang.String) "Lunar Lander"
+
+TargetUPS: (java.lang.Integer) "200"
+TargetFPS: (java.lang.Integer) "60"
+
+OnScreenDebug: (java.lang.Boolean) "true"
+DebugID: (java.lang.Boolean) "false"
+DebugLog: (java.lang.Boolean) "false"
+DebugGameSystem: (java.lang.Boolean) "true"
+
+Resolution: (java.awt.Dimension){
+	(java.lang.Integer)"1000"
+	(java.lang.Integer)"800"
+}
+
+MainCamera: (game.gameObject.graphics.Camera) {
+	(java.awt.geom.Rectangle2D$Float) {
+		(java.lang.Float)"0"
+		(java.lang.Float)"0"
+		(java.lang.Float)"800"
+		(java.lang.Float)"600"
+	},
+	(game.screen.ScreenRect) {
+		(java.lang.Float)"0"
+		(java.lang.Float)"0"
+		(java.lang.Float)"1"
+		(java.lang.Float)"1"
+	}, 
+	(java.awt.Color) {
+		(java.lang.Integer)"0"
+		(java.lang.Integer)"255"
+		(java.lang.Integer)"0"
+	}
+}
+
+ScreenMode: (game.screen.Screen$Mode) "#NORMAL"
+
+GameInit: (lunarLander.LunarLander) { }
