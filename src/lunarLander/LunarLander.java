@@ -60,6 +60,12 @@ public class LunarLander implements GameInitializer{
 		
 		settings.putSetting("ScreenMode", Screen.Mode.NORMAL);
 		
+		settings.putSetting("OnScreenDebug", true);
+		
+		settings.putSetting("DebugID", true);
+		
+		settings.putSetting("DebugGameSystem", true);
+		
 		Game game = new Game(settings);
 		
 		game.run();
@@ -93,6 +99,7 @@ public class LunarLander implements GameInitializer{
 		};
 		
 		Polygon poly = new Polygon(xpoints, ypoints, xpoints.length);
+		
 		/*
 		float landHeight = 400;
 		
@@ -100,11 +107,13 @@ public class LunarLander implements GameInitializer{
 		
 		Game.gameObjectHandler.addGameObject(land, "Land");
 		*/
+		
 		Ship ship = new Ship(200, 200, poly, settings.getSettingAs("MainCamera", Camera.class).getBounds());
 		
 		Game.gameObjectHandler.addGameObject(ship, "Player ship");
 		
-		BoxTransform<GameObject> transform = new BoxTransform<>(null, 0, 0, Game.screen.getWidth(), Game.screen.getHeight());
+		//FIXME: Never pass null to the transform constructor!
+		BoxTransform<GameObject> transform = new BoxTransform<GameObject>(null, 0, 0, Game.screen.getWidth(), Game.screen.getHeight());
 		
 		ParticleSystem system = new ParticleSystem(transform, 4, 2000, (p) -> { p.setLifetime(1.5f); p.color = Color.red; });
 		
