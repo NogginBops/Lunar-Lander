@@ -45,6 +45,8 @@ public class LunarLander implements GameInitializer{
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		Game.log.setLogConsumer((message) -> { System.out.printf("%-50.50s %15.15s: at %s\n", message.getMessage(), message.getImportance(), message.getLogCallSite()); });
+		
 		GameSettings settings = SettingsUtil.load("./res/Settings.set");
 		
 		Game game = new Game(settings);
