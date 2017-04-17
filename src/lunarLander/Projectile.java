@@ -3,6 +3,7 @@ package lunarLander;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -11,6 +12,7 @@ import game.gameObject.GameObject;
 import game.gameObject.graphics.Paintable;
 import game.gameObject.physics.BasicRotatable;
 import game.gameObject.physics.Collidable;
+import game.util.math.vector.Vector2D;
 
 /**
  * @author Julius Häger
@@ -26,6 +28,11 @@ public class Projectile extends BasicRotatable implements Collidable, Paintable{
 	
 	protected float lifetime = 5;
 	protected float lifetimeTimer = lifetime;
+	
+	protected float homing = 0.1f;
+	protected float homingRadius = 100;
+	
+	protected float maxVel = 200;
 	
 	protected GameObject shooter;
 	
@@ -51,7 +58,11 @@ public class Projectile extends BasicRotatable implements Collidable, Paintable{
 		
 		this.outerBounds = outerBounds;
 		
-		setVelocity((float)-(speed * Math.sin(Math.toRadians(rotation))), (float)(speed * Math.cos(Math.toRadians(rotation))));
+		setVelocity(Vector2D.mult(
+				Vector2D.normalize(
+						new Vector2D((float)-(speed * Math.sin(Math.toRadians(rotation))),
+								(float)(speed * Math.cos(Math.toRadians(rotation))))),
+				maxVel));
 	}
 
 	@Override
@@ -73,6 +84,14 @@ public class Projectile extends BasicRotatable implements Collidable, Paintable{
 			
 			if(outerBounds.getMinY() > bounds.getMinY() || outerBounds.getMaxY() < bounds.getMaxY()){
 				setDY(-getDY());
+			}
+		}
+		
+		Collidable[] collidables = Game.physicsEngine.overlapShape(new Ellipse2D.Float(transform.getX() - homingRadius, transform.getY() - homingRadius, homingRadius * 2, homingRadius * 2), 0, 1, 2, 3, 4, 5);
+		
+		for (Collidable collidable : collidables) {
+			if (collidable instanceof Enemy) {
+				setVelocity(getDX() + ((collidable.getX() - getX()) * homing), getDY() + ((collidable.getY() - getY()) * homing));				
 			}
 		}
 	}

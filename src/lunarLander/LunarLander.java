@@ -20,16 +20,21 @@ import game.GameSettings;
 import game.GameSystem;
 import game.IO.IOHandler;
 import game.IO.load.LoadRequest;
+import game.controller.event.engineEvents.GameQuitEvent;
+import game.controller.event.engineEvents.SceneLoadEvent;
 import game.debug.log.Log.LogImportance;
 import game.gameObject.BasicGameObject;
 import game.gameObject.GameObject;
 import game.gameObject.graphics.Camera;
 import game.gameObject.graphics.Paintable;
+import game.gameObject.handler.event.GameObjectCreatedEvent;
+import game.gameObject.handler.event.GameObjectDestroyedEvent;
 import game.gameObject.particles.Particle;
 import game.gameObject.particles.ParticleEffector;
 import game.gameObject.particles.ParticleEmitter;
 import game.gameObject.particles.ParticleSystem;
 import game.gameObject.transform.BoxTransform;
+import game.gameObject.transform.Transform;
 import game.input.mouse.MouseListener;
 import game.settings.SettingsUtil;
 import game.util.math.ColorUtils;
@@ -84,6 +89,8 @@ public class LunarLander implements GameInitializer{
 		Game.keyHandler.addKeyBinding("Left", KeyEvent.VK_A, KeyEvent.VK_LEFT);
 		Game.keyHandler.addKeyBinding("Right", KeyEvent.VK_D, KeyEvent.VK_RIGHT);
 		Game.keyHandler.addKeyBinding("Fire", KeyEvent.VK_SPACE);
+		Game.keyHandler.addKeyBinding("Up", KeyEvent.VK_W);
+		Game.keyHandler.addKeyBinding("Down", KeyEvent.VK_S);
 		
 		float width = 20;
 		float height = 20;
@@ -167,11 +174,26 @@ public class LunarLander implements GameInitializer{
 		system.addImage(1, particleImage);
 		
 		//NOTE: Is this a good practice?
-		Game.updater.addSystem(new GameSystem("Exaust Updater") {
+		new GameSystem("Exaust Updater") {
 			
 			CopyOnWriteArrayList<ParticleEmitter> projectileEmitters;
 			
-			CopyOnWriteArrayList<Projectile> projectiles;
+			CopyOnWriteArrayList<Projectile> projectiles = new CopyOnWriteArrayList<>();
+			
+			{
+				Game.eventMachine.addEventListener(GameQuitEvent.class, (event) -> { destroy(); });
+				Game.eventMachine.addEventListener(SceneLoadEvent.class, (event) -> { destroy(); });
+				Game.eventMachine.addEventListener(GameObjectCreatedEvent.class, (event) -> { 
+					if(event.object instanceof Projectile) {
+						projectiles.add((Projectile) event.object);
+					}
+				});
+				Game.eventMachine.addEventListener(GameObjectDestroyedEvent.class, (event) -> {
+					if (event.object instanceof Projectile) {
+						projectiles.remove(event.object);
+					}
+				});
+			}
 			
 			@Override
 			public void earlyUpdate(float deltaTime) {
@@ -186,9 +208,7 @@ public class LunarLander implements GameInitializer{
 					}
 				}
 				
-				if(Game.gameObjectHandler.shouldUpdateObjects()){
-					projectiles = Game.gameObjectHandler.getAllGameObjectsExtending(Projectile.class);
-				}
+				Game.log.logDebug("Number of projectiles: " + projectiles.size());
 				
 				int i = 0;
 				for (ParticleEmitter emitter : projectileEmitters) {
@@ -216,13 +236,13 @@ public class LunarLander implements GameInitializer{
 			public void lateUpdate(float deltaTime) {
 				emitter.enabled = ship.isThrusting();
 			}
-		});
+		};
 		
 		//Enemy enemy = new Enemy(new Transform(), poly, 5, ship);
 		
 		//Game.gameObjectHandler.addGameObject(enemy, "Enemy");
 		
-		Game.updater.addSystem(new GameSystem("Enemy Spawner") {
+		new GameSystem("Enemy Spawner") {
 			
 			float intervalMax = 10;
 			float intervalMin = 2;
@@ -230,6 +250,11 @@ public class LunarLander implements GameInitializer{
 			float timer = 0;
 			
 			Random rand = new Random();
+			
+			{
+				Game.eventMachine.addEventListener(GameQuitEvent.class, (event) -> { destroy(); });
+				Game.eventMachine.addEventListener(SceneLoadEvent.class, (event) -> { destroy(); });
+			}
 			
 			@Override
 			public void earlyUpdate(float deltaTime) {
@@ -240,7 +265,7 @@ public class LunarLander implements GameInitializer{
 					
 					//Spawn enemy
 					
-					//Game.gameObjectHandler.addGameObject(new Enemy(new Transform(), poly, 5, ship), "Enemy");
+					Game.gameObjectHandler.addGameObject(new Enemy(new Transform<GameObject>(null), poly, 5, ship), "Enemy");
 					
 					timer = intervalMin + (rand.nextFloat() * (intervalMax - intervalMin));
 				}
@@ -251,7 +276,7 @@ public class LunarLander implements GameInitializer{
 			public void lateUpdate(float deltaTime) {
 				
 			}
-		});
+		};
 		
 		//TODO: Remove or find a better place for this code
 		

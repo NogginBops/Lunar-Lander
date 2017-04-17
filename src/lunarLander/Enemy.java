@@ -43,7 +43,9 @@ public class Enemy extends BasicRotatable implements Paintable, Collidable, Dest
 	public void update(float deltaTime) {
 		super.update(deltaTime);
 		
-		setVelocity(Vector2D.mult(Vector2D.normalize(new Vector2D( target.getX()- getX(), target.getY() - getY() )), speed));
+		setVelocity(Vector2D.mult(Vector2D.normalize(new Vector2D( target.getX() - getX(), target.getY() - getY() )), speed));
+		
+		transform.setRotation(Vector2D.angle(Vector2D.UP, getVelocity()));
 	}
 	
 	@Override
