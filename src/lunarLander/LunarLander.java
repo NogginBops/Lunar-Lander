@@ -34,7 +34,6 @@ import game.gameObject.particles.ParticleEffector;
 import game.gameObject.particles.ParticleEmitter;
 import game.gameObject.particles.ParticleSystem;
 import game.gameObject.transform.BoxTransform;
-import game.gameObject.transform.Transform;
 import game.input.mouse.MouseListener;
 import game.settings.SettingsUtil;
 import game.util.math.ColorUtils;
@@ -109,19 +108,20 @@ public class LunarLander implements GameInitializer{
 		
 		Polygon poly = new Polygon(xpoints, ypoints, xpoints.length);
 		
-		/*
-		float landHeight = 400;
+		//float landHeight = 400;
 		
-		Land land = Land.generateLand(0, Game.screen.getHeight() - landHeight - 10, Game.screen.getWidth(), landHeight, 150);
+		//Land land = Land.generateLand(0, Game.screen.getHeight() - landHeight - 10, Game.screen.getWidth(), landHeight, 150);
 		
-		Game.gameObjectHandler.addGameObject(land, "Land");
-		*/
+		//Game.gameObjectHandler.addGameObject(land, "Land");
 		
 		Ship ship = new Ship(200, 200, poly, settings.getSettingAs("MainCamera", Camera.class).getBounds());
 		
 		Game.gameObjectHandler.addGameObject(ship, "Player ship");
 		
+		settings.getSettingAs("MainCamera", PlayerCamera.class).setPlayer(ship);
+		
 		//FIXME: Never pass null to the transform constructor!
+		// The ParticleSystem constructor should not require a Transform!
 		BoxTransform<GameObject> transform = new BoxTransform<GameObject>(null, 0, 0, Game.screen.getWidth(), Game.screen.getHeight());
 		
 		ParticleSystem system = new ParticleSystem(transform, 4, 2000, (p) -> { p.setLifetime(1.5f); p.color = Color.red; });
@@ -208,8 +208,6 @@ public class LunarLander implements GameInitializer{
 					}
 				}
 				
-				Game.log.logDebug("Number of projectiles: " + projectiles.size());
-				
 				int i = 0;
 				for (ParticleEmitter emitter : projectileEmitters) {
 					if(i < projectiles.size()){
@@ -265,7 +263,7 @@ public class LunarLander implements GameInitializer{
 					
 					//Spawn enemy
 					
-					Game.gameObjectHandler.addGameObject(new Enemy(new Transform<GameObject>(null), poly, 5, ship), "Enemy");
+					//Game.gameObjectHandler.addGameObject(new Enemy(new Transform<GameObject>(null), poly, 5, ship), "Enemy");
 					
 					timer = intervalMin + (rand.nextFloat() * (intervalMax - intervalMin));
 				}

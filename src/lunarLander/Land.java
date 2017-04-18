@@ -133,5 +133,4 @@ public class Land extends BasicCollidable implements Paintable {
 			}
 		}
 	}
-
 }

@@ -3,7 +3,6 @@ package lunarLander;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -58,11 +57,7 @@ public class Projectile extends BasicRotatable implements Collidable, Paintable{
 		
 		this.outerBounds = outerBounds;
 		
-		setVelocity(Vector2D.mult(
-				Vector2D.normalize(
-						new Vector2D((float)-(speed * Math.sin(Math.toRadians(rotation))),
-								(float)(speed * Math.cos(Math.toRadians(rotation))))),
-				maxVel));
+		setVelocity(new Vector2D((float)-(speed * Math.sin(Math.toRadians(rotation))), (float)(speed * Math.cos(Math.toRadians(rotation)))));
 	}
 
 	@Override
@@ -87,13 +82,32 @@ public class Projectile extends BasicRotatable implements Collidable, Paintable{
 			}
 		}
 		
+		/*
 		Collidable[] collidables = Game.physicsEngine.overlapShape(new Ellipse2D.Float(transform.getX() - homingRadius, transform.getY() - homingRadius, homingRadius * 2, homingRadius * 2), 0, 1, 2, 3, 4, 5);
 		
+		Vector2D sum = Vector2D.ZERO;
 		for (Collidable collidable : collidables) {
 			if (collidable instanceof Enemy) {
-				setVelocity(getDX() + ((collidable.getX() - getX()) * homing), getDY() + ((collidable.getY() - getY()) * homing));				
+				Vector2D dir = new Vector2D(collidable.getX() - getX(), collidable.getY() - getY());
+				dir.normalize();
+				dir.mult(homing);
+				
+				sum.add(dir);
 			}
 		}
+		*/
+		
+		//sum.add(getVelocity());
+		
+		//if (sum.getLength() > maxVel) {
+		//	sum.div(sum.getLength() / maxVel);
+		//}
+		
+		//TODO: Fix projectile homing!
+		
+		//float angle = Vector2D.angle(getVelocity(), sum);
+		
+		//setVelocity(Vector2D.rotate(getVelocity(), -angle * homing));
 	}
 	
 	@Override

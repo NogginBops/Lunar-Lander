@@ -11,6 +11,7 @@ import game.gameObject.graphics.Paintable;
 import game.gameObject.physics.BasicRotatable;
 import game.gameObject.physics.Collidable;
 import game.gameObject.transform.Transform;
+import game.util.math.ColorUtils;
 import game.util.math.vector.Vector2D;
 
 /**
@@ -80,6 +81,7 @@ public class Enemy extends BasicRotatable implements Paintable, Collidable, Dest
 	@Override
 	public void damage(float damage) {
 		health -= damage;
+		color = ColorUtils.Lerp(color, Color.RED, 0.5f);
 		if(health < 0){
 			destroy();
 		}

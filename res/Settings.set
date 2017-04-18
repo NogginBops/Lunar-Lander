@@ -9,11 +9,11 @@ DebugLog: (java.lang.Boolean) "false"
 DebugGameSystem: (java.lang.Boolean) "true"
 
 Resolution: (java.awt.Dimension){
-	(java.lang.Integer)"1000"
 	(java.lang.Integer)"800"
+	(java.lang.Integer)"600"
 }
 
-MainCamera: (game.gameObject.graphics.Camera) {
+MainCamera: (lunarLander.PlayerCamera) {
 	(java.awt.geom.Rectangle2D$Float) {
 		(java.lang.Float)"0"
 		(java.lang.Float)"0"
