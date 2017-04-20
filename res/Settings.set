@@ -4,9 +4,9 @@ TargetUPS: (java.lang.Integer) "200"
 TargetFPS: (java.lang.Integer) "60"
 
 OnScreenDebug: (java.lang.Boolean) "true"
-DebugID: (java.lang.Boolean) "true"
+DebugID: (java.lang.Boolean) "false"
 DebugLog: (java.lang.Boolean) "false"
-DebugGameSystem: (java.lang.Boolean) "true"
+DebugGameSystem: (java.lang.Boolean) "false"
 
 Resolution: (java.awt.Dimension){
 	(java.lang.Integer)"800"

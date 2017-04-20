@@ -126,9 +126,8 @@ public class Ship extends BasicRotatable implements Paintable, Collidable, KeyLi
 		dr = MathUtils.Lerpf(dr, 0, 0.002f);
 		
 		//TODO: A better system for gravity
+		//Should be implemented with the physics engine
 		//setDY(getDY() + 0.01f);
-		
-		
 		
 		if(outerBounds.contains(getBounds()) == false){
 			
