@@ -6,11 +6,9 @@ import java.awt.Shape;
 import java.awt.image.BufferedImage;
 
 import game.Game;
-import game.gameObject.GameObject;
 import game.gameObject.graphics.Paintable;
 import game.gameObject.physics.BasicRotatable;
 import game.gameObject.physics.Collidable;
-import game.gameObject.transform.Transform;
 import game.util.math.ColorUtils;
 import game.util.math.vector.Vector2D;
 
@@ -34,8 +32,8 @@ public class Enemy extends BasicRotatable implements Paintable, Collidable, Dest
 	 * @param zOrder
 	 * @param target
 	 */
-	public Enemy(Transform<GameObject> transform, Shape shape, int zOrder, Ship target) {
-		super(transform, shape, zOrder, 0);
+	public Enemy(Shape shape, int zOrder, Ship target) {
+		super(shape, zOrder, 0);
 		
 		this.target = target;
 	}

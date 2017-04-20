@@ -24,7 +24,6 @@ import game.controller.event.engineEvents.GameQuitEvent;
 import game.controller.event.engineEvents.SceneLoadEvent;
 import game.debug.log.Log.LogImportance;
 import game.gameObject.BasicGameObject;
-import game.gameObject.GameObject;
 import game.gameObject.graphics.Camera;
 import game.gameObject.graphics.Paintable;
 import game.gameObject.handler.event.GameObjectCreatedEvent;
@@ -33,7 +32,6 @@ import game.gameObject.particles.Particle;
 import game.gameObject.particles.ParticleEffector;
 import game.gameObject.particles.ParticleEmitter;
 import game.gameObject.particles.ParticleSystem;
-import game.gameObject.transform.BoxTransform;
 import game.input.mouse.MouseListener;
 import game.settings.SettingsUtil;
 import game.util.math.ColorUtils;
@@ -122,9 +120,8 @@ public class LunarLander implements GameInitializer{
 		
 		//FIXME: Never pass null to the transform constructor!
 		// The ParticleSystem constructor should not require a Transform!
-		BoxTransform<GameObject> transform = new BoxTransform<GameObject>(null, 0, 0, Game.screen.getWidth(), Game.screen.getHeight());
 		
-		ParticleSystem system = new ParticleSystem(transform, 4, 2000, (p) -> { p.setLifetime(1.5f); p.color = Color.red; });
+		ParticleSystem system = new ParticleSystem(0, 0, Game.screen.getWidth(), Game.screen.getHeight(), 0, 0, 4, 2000, (p) -> { p.setLifetime(1.5f); p.color = Color.red; });
 		
 		ParticleEmitter emitter = new ParticleEmitter((system.getWidth()/2)-(width/2), 0, 10, 10, 200);
 		
@@ -263,7 +260,7 @@ public class LunarLander implements GameInitializer{
 					
 					//Spawn enemy
 					
-					//Game.gameObjectHandler.addGameObject(new Enemy(new Transform<GameObject>(null), poly, 5, ship), "Enemy");
+					//Game.gameObjectHandler.addGameObject(new Enemy(poly, 5, ship), "Enemy");
 					
 					timer = intervalMin + (rand.nextFloat() * (intervalMax - intervalMin));
 				}
