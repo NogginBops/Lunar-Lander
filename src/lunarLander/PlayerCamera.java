@@ -18,7 +18,7 @@ public class PlayerCamera extends Camera {
 		//this.ship = ship;
 		
 		//TODO: Fix camera rendering and child transforms
-		transform.setParent(ship.getTransform());
+		//transform.setParent(ship.getTransform());
 		//transform.setRotation(180);
 		//transform.setPosition(getWidth()/2, getHeight()/2);
 	}
