@@ -9,8 +9,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -47,7 +46,7 @@ public class LunarLander implements GameInitializer{
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Game.log.setLogConsumer((message) -> { System.out.printf("%-50.50s %15.15s: at %s\n", message.getMessage(), message.getImportance(), message.getLogCallSite()); });
+		Game.log.setLogConsumer((message) -> { System.out.printf("%-55.55s %15.15s: at %s\n", message.getMessage(), message.getImportance(), message.getLogCallSite()); });
 		
 		GameSettings settings = SettingsUtil.load("./res/Settings.set");
 		
@@ -161,11 +160,7 @@ public class LunarLander implements GameInitializer{
 		
 		BufferedImage particleImage = null;
 		
-		try {
-			particleImage = IOHandler.load(new LoadRequest<BufferedImage>("StandardParticle", new File("./res/particles/StandardParticle_10.png"), BufferedImage.class)).result;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		particleImage = IOHandler.load(new LoadRequest<BufferedImage>("StandardParticle", Paths.get("./res/particles/StandardParticle_10.png"), BufferedImage.class)).result;
 		
 		system.addImage(0, particleImage);
 		system.addImage(1, particleImage);
