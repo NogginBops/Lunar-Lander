@@ -53,26 +53,6 @@ public class LunarLander implements GameInitializer{
 		Game.setup(settings);
 		
 		Game.run();
-		
-		/*
-		GameSettings settings = GameSettings.createDefaultGameSettings();
-		
-		settings.putSetting("OnScreenDebug", false);
-		
-		settings.putSetting("GameInit", new LunarLander());
-		
-		settings.putSetting("ScreenMode", Screen.Mode.NORMAL);
-		
-		settings.putSetting("OnScreenDebug", true);
-		
-		settings.putSetting("DebugID", true);
-		
-		settings.putSetting("DebugGameSystem", true);
-		
-		Game game = new Game(settings);
-		
-		game.run();
-		*/
 	}
 	
 	@Override
