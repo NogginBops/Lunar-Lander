@@ -50,9 +50,9 @@ public class LunarLander implements GameInitializer{
 		
 		GameSettings settings = SettingsUtil.load("./res/Settings.set");
 		
-		Game game = new Game(settings);
+		Game.setup(settings);
 		
-		game.run();
+		Game.run();
 		
 		/*
 		GameSettings settings = GameSettings.createDefaultGameSettings();
@@ -76,7 +76,7 @@ public class LunarLander implements GameInitializer{
 	}
 	
 	@Override
-	public void initialize(Game game, GameSettings settings) {
+	public void initialize(GameSettings settings) {
 		settings.getSettingAs("MainCamera", Camera.class).setBackgroundColor(Color.black);
 		
 		Game.log.setAcceptLevel(LogImportance.DEBUG);
